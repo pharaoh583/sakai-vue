@@ -35,6 +35,14 @@ export default {
             mobileMenuActive: false,
             menu : [
                 {
+					label: 'Operaciones', icon: 'pi pi-fw pi-sitemap',
+					items: [
+						{label: 'Transacciones', icon: 'pi pi-fw pi-check-square', to: '/trans'},
+						{label: 'Empleados', icon: 'pi pi-fw pi-list', to: '/empleados'},
+						{label: 'Cuentas', icon: 'pi pi-fw pi-file', to: '/cuentas'},
+					]
+				},
+                {
                     label: 'Home',
                     items: [{
                         label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/'

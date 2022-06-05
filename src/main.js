@@ -5,7 +5,7 @@ import 'prismjs/themes/prism-coy.css';
 import './assets/styles/layout.scss';
 import './assets/demo/flags/flags.css';
 
-import { createApp, reactive } from 'vue';
+import { createApp, reactive, h } from 'vue';
 import router from './router';
 import AppWrapper from './AppWrapper.vue';
 import PrimeVue from 'primevue/config';
@@ -96,106 +96,123 @@ import TriStateCheckbox from 'primevue/tristatecheckbox';
 
 import CodeHighlight from './AppCodeHighlight';
 import BlockViewer from './BlockViewer';
+import Keycloak from 'keycloak-js';
 
-router.beforeEach(function(to, from, next) {
-    window.scrollTo(0, 0);
-    next();
+let initOptions = {
+    url: 'http://192.168.99.100:8080/auth',
+    realm: '6to',
+    clientId: 'banco',
+    onLoad: 'login-required'
+}
+
+let keycloak = Keycloak(initOptions);
+
+keycloak.init({onLoad: initOptions.onLoad}).then((auth) => {
+    console.log('Keycloak login: ' + auth);
+    const app = createApp({
+        render() {
+            return h(AppWrapper, { props: { keycloak: keycloak }}); 
+        }
+    });
+    // const app = createApp(AppWrapper);
+    app.config.globalProperties.$appState = reactive({ theme: 'lara-light-indigo', darkTheme: false });
+    app.config.globalProperties.$keycloak = keycloak;
+    
+    app.use(PrimeVue, { ripple: true, inputStyle: 'outlined' });
+    app.use(ConfirmationService);
+    app.use(ToastService);
+    app.use(router);
+    router.beforeEach(function(to, from, next) {
+        window.scrollTo(0, 0);
+        next();
+    });
+    app.directive('tooltip', Tooltip);
+    app.directive('ripple', Ripple);
+    app.directive('code', CodeHighlight);
+    app.directive('badge', BadgeDirective);
+    app.directive('styleclass', StyleClass);
+
+    app.component('Empleados', Empleados);
+    app.component('Accordion', Accordion);
+    app.component('AccordionTab', AccordionTab);
+    app.component('AutoComplete', AutoComplete);
+    app.component('Avatar', Avatar);
+    app.component('AvatarGroup', AvatarGroup);
+    app.component('Badge', Badge);
+    app.component('Breadcrumb', Breadcrumb);
+    app.component('Button', Button);
+    app.component('Calendar', Calendar);
+    app.component('Card', Card);
+    app.component('Carousel', Carousel);
+    app.component('Chart', Chart);
+    app.component('Checkbox', Checkbox);
+    app.component('Chip', Chip);
+    app.component('Chips', Chips);
+    app.component('ColorPicker', ColorPicker);
+    app.component('Column', Column);
+    app.component('ConfirmDialog', ConfirmDialog);
+    app.component('ConfirmPopup', ConfirmPopup);
+    app.component('ContextMenu', ContextMenu);
+    app.component('DataTable', DataTable);
+    app.component('DataView', DataView);
+    app.component('DataViewLayoutOptions', DataViewLayoutOptions);
+    app.component('Dialog', Dialog);
+    app.component('Divider', Divider);
+    app.component('Dropdown', Dropdown);
+    app.component('Fieldset', Fieldset);
+    app.component('FileUpload', FileUpload);
+    app.component('Image', Image);
+    app.component('InlineMessage', InlineMessage);
+    app.component('Inplace', Inplace);
+    app.component('InputMask', InputMask);
+    app.component('InputNumber', InputNumber);
+    app.component('InputSwitch', InputSwitch);
+    app.component('InputText', InputText);
+    app.component('Galleria', Galleria);
+    app.component('Knob', Knob);
+    app.component('Listbox', Listbox);
+    app.component('MegaMenu', MegaMenu);
+    app.component('Menu', Menu);
+    app.component('Menubar', Menubar);
+    app.component('Message', Message);
+    app.component('MultiSelect', MultiSelect);
+    app.component('OrderList', OrderList);
+    app.component('OrganizationChart', OrganizationChart);
+    app.component('OverlayPanel', OverlayPanel);
+    app.component('Paginator', Paginator);
+    app.component('Panel', Panel);
+    app.component('PanelMenu', PanelMenu);
+    app.component('Password', Password);
+    app.component('PickList', PickList);
+    app.component('ProgressBar', ProgressBar);
+    app.component('RadioButton', RadioButton);
+    app.component('Rating', Rating);
+    app.component('SelectButton', SelectButton);
+    app.component('ScrollPanel', ScrollPanel);
+    app.component('ScrollTop', ScrollTop);
+    app.component('Slider', Slider);
+    app.component('Sidebar', Sidebar);
+    app.component('Skeleton', Skeleton);
+    app.component('SplitButton', SplitButton);
+    app.component('Splitter', Splitter);
+    app.component('SplitterPanel', SplitterPanel);
+    app.component('Steps', Steps);
+    app.component('TabMenu', TabMenu);
+    app.component('TabView', TabView);
+    app.component('TabPanel', TabPanel);
+    app.component('Tag', Tag);
+    app.component('Textarea', Textarea);
+    app.component('TieredMenu', TieredMenu);
+    app.component('Timeline', Timeline);
+    app.component('Toast', Toast);
+    app.component('Toolbar', Toolbar);
+    app.component('ToggleButton', ToggleButton);
+    app.component('Tree', Tree);
+    app.component('TreeSelect', TreeSelect);
+    app.component('TreeTable', TreeTable);
+    app.component('TriStateCheckbox', TriStateCheckbox);
+
+    app.component('BlockViewer', BlockViewer);
+
+    app.mount('#app');    
 });
-
-const app = createApp(AppWrapper);
-
-app.config.globalProperties.$appState = reactive({ theme: 'lara-light-indigo', darkTheme: false });
-
-app.use(PrimeVue, { ripple: true, inputStyle: 'outlined' });
-app.use(ConfirmationService);
-app.use(ToastService);
-app.use(router);
-
-app.directive('tooltip', Tooltip);
-app.directive('ripple', Ripple);
-app.directive('code', CodeHighlight);
-app.directive('badge', BadgeDirective);
-app.directive('styleclass', StyleClass);
-
-app.component('Accordion', Accordion);
-app.component('AccordionTab', AccordionTab);
-app.component('AutoComplete', AutoComplete);
-app.component('Avatar', Avatar);
-app.component('AvatarGroup', AvatarGroup);
-app.component('Badge', Badge);
-app.component('Breadcrumb', Breadcrumb);
-app.component('Button', Button);
-app.component('Calendar', Calendar);
-app.component('Card', Card);
-app.component('Carousel', Carousel);
-app.component('Chart', Chart);
-app.component('Checkbox', Checkbox);
-app.component('Chip', Chip);
-app.component('Chips', Chips);
-app.component('ColorPicker', ColorPicker);
-app.component('Column', Column);
-app.component('ConfirmDialog', ConfirmDialog);
-app.component('ConfirmPopup', ConfirmPopup);
-app.component('ContextMenu', ContextMenu);
-app.component('DataTable', DataTable);
-app.component('DataView', DataView);
-app.component('DataViewLayoutOptions', DataViewLayoutOptions);
-app.component('Dialog', Dialog);
-app.component('Divider', Divider);
-app.component('Dropdown', Dropdown);
-app.component('Fieldset', Fieldset);
-app.component('FileUpload', FileUpload);
-app.component('Image', Image);
-app.component('InlineMessage', InlineMessage);
-app.component('Inplace', Inplace);
-app.component('InputMask', InputMask);
-app.component('InputNumber', InputNumber);
-app.component('InputSwitch', InputSwitch);
-app.component('InputText', InputText);
-app.component('Galleria', Galleria);
-app.component('Knob', Knob);
-app.component('Listbox', Listbox);
-app.component('MegaMenu', MegaMenu);
-app.component('Menu', Menu);
-app.component('Menubar', Menubar);
-app.component('Message', Message);
-app.component('MultiSelect', MultiSelect);
-app.component('OrderList', OrderList);
-app.component('OrganizationChart', OrganizationChart);
-app.component('OverlayPanel', OverlayPanel);
-app.component('Paginator', Paginator);
-app.component('Panel', Panel);
-app.component('PanelMenu', PanelMenu);
-app.component('Password', Password);
-app.component('PickList', PickList);
-app.component('ProgressBar', ProgressBar);
-app.component('RadioButton', RadioButton);
-app.component('Rating', Rating);
-app.component('SelectButton', SelectButton);
-app.component('ScrollPanel', ScrollPanel);
-app.component('ScrollTop', ScrollTop);
-app.component('Slider', Slider);
-app.component('Sidebar', Sidebar);
-app.component('Skeleton', Skeleton);
-app.component('SplitButton', SplitButton);
-app.component('Splitter', Splitter);
-app.component('SplitterPanel', SplitterPanel);
-app.component('Steps', Steps);
-app.component('TabMenu', TabMenu);
-app.component('TabView', TabView);
-app.component('TabPanel', TabPanel);
-app.component('Tag', Tag);
-app.component('Textarea', Textarea);
-app.component('TieredMenu', TieredMenu);
-app.component('Timeline', Timeline);
-app.component('Toast', Toast);
-app.component('Toolbar', Toolbar);
-app.component('ToggleButton', ToggleButton);
-app.component('Tree', Tree);
-app.component('TreeSelect', TreeSelect);
-app.component('TreeTable', TreeTable);
-app.component('TriStateCheckbox', TriStateCheckbox);
-
-app.component('BlockViewer', BlockViewer);
-
-app.mount('#app');

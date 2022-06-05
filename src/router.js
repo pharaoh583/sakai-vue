@@ -3,7 +3,7 @@ import App from './App.vue';
 
 const routes = [
     {
-        path: '/',
+        path: '/:state([&\\?]state=[^&\\$]*)?:session_state([&\\?]session_state=[^&\\$]*)?:code([&\\?]code=[^&\\$]*)?:scope([&\\?]scope=[^&\\$]*)?',
         name: 'app',
         component: App,
         children: [
@@ -11,6 +11,21 @@ const routes = [
                 path: '',
                 name: 'dashboard',
                 component: () => import('./components/Dashboard.vue')
+            },
+            {
+                path: '/empleados',
+                name: 'empleados',
+                component: () => import('./pages/Empleados.vue')
+            },
+            {
+                path: '/cuentas',
+                name: 'cuentas',
+                component: () => import('./pages/Cuentas.vue')
+            },
+            {
+                path: '/trans',
+                name: 'trans',
+                component: () => import('./pages/Transacciones.vue')
             },
             {
                 path: '/formlayout',
