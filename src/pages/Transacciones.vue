@@ -100,7 +100,7 @@ export default {
 				return;
 			}
 			await fetch(
-				`http://localhost:8003/api/cuenta`,{
+				`http://localhost:8002/api/transaccion`,{
 				method: "POST",
 				body: JSON.stringify({
                     eid: this.empleado,

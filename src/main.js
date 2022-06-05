@@ -132,7 +132,7 @@ keycloak.init({onLoad: initOptions.onLoad}).then((auth) => {
     app.directive('badge', BadgeDirective);
     app.directive('styleclass', StyleClass);
 
-    app.component('Empleados', Empleados);
+
     app.component('Accordion', Accordion);
     app.component('AccordionTab', AccordionTab);
     app.component('AutoComplete', AutoComplete);
